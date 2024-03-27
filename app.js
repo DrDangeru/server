@@ -6,7 +6,7 @@ const cors = require('cors'); // Import cors middleware
 const app = express();
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://192.168.124.101:3001',
+  origin: '*',
 }));
 app.use(express.urlencoded({ extended: true }));// may cause
 // issues as other json parser used ??

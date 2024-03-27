@@ -13,7 +13,7 @@
   "version": "1.0.0",
   "description": "sqliteMovieDb",
   "main": "app.js",
-  "proxy": "http://localhost:3000",
+ 
   "scripts": {},
   "author": "",
   "license": "ISC"
