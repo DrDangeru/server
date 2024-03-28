@@ -37,7 +37,8 @@ let db = new sqlite.Database('quote.db', sqlite.OPEN_READWRITE, (err) => {
 // }
 //   )
 // })
-// GET all quotes from local Db
+
+// GET all quotes from local Db GET
 app.get('/quote', (req, res) => {
   try {
     sql = 'SELECT * FROM quote';
@@ -66,21 +67,22 @@ app.get('/quote', (req, res) => {
   }
 });
 
-// SEARCH for movie quote in the database
+// SEARCH for movie quote in the database SEARCH
 app.post('/quote', (req, res) => {
-  const searchStr = req.body.searchStr; // accessing searchStr from request body
-  const sql = 'SELECT * FROM quote WHERE movie LIKE ? OR character LIKE ? OR quote LIKE ?';
-  const params = [`%${searchStr}%`, `%${searchStr}%`, `%${searchStr}%`];
-
-  db.all(sql, params, (err, rows) => {
+  const searchStr = req.query.searchStr; // accessing searchStr
+  const sql = ('SELECT * FROM quote WHERE movie LIKE ? OR character LIKE ? OR quote LIKE ? VALUE(?)');
+  console.log(req.query, 'req.query text');
+  console.log(searchStr, '*transfered searchStr*');
+  db.all(sql, searchStr, (err, rows) => {
     if (err) {
+      console(err, 'ERROR IS PREV')
       return res.status(404).json({
         status: 404,
         success: false,
         error: err.message,
       });
     }
-    console.log('Here are all the Movie quotes we have', rows);
+    console.log('Here are all the Movie quotes we have matched', rows);
     res.status(200).json({
       status: 200,
       success: true,
@@ -89,8 +91,7 @@ app.post('/quote', (req, res) => {
   });
 });
 
-
-// delete quote by id (in the Local Db)
+// DELETE quote by id (in the Local Db)
 app.delete('/quote/:id', (req, res) => {
   try {
     const id = req.params.id;
@@ -120,7 +121,7 @@ app.delete('/quote/:id', (req, res) => {
 });
 
 // Add quote  to local Db
-app.post('/quote', (req, res) => {
+app.get('/quote', (req, res) => {
   try {
     const { movie, character, quote } = req.body;
     sql = ('INSERT INTO quote(movie,quote,character) VALUES (?,?,?)');
