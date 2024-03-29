@@ -70,12 +70,12 @@ app.get('/quote', (req, res) => {
 // SEARCH for movie quote in the database SEARCH
 app.post('/quote', (req, res) => {
   const searchStr = req.query.searchStr; // accessing searchStr
-  const sql = ('SELECT * FROM quote WHERE movie LIKE ? OR character LIKE ? OR quote LIKE ? VALUE(?)');
+  const sql = 'SELECT * FROM quote WHERE movie LIKE CONCAT("%", ?, "%") OR character LIKE CONCAT("%", ?, "%") OR quote LIKE CONCAT("%", ?, "%")';
   console.log(req.query, 'req.query text');
   console.log(searchStr, '*transfered searchStr*');
-  db.all(sql, searchStr, (err, rows) => {
+  db.all(sql, [searchStr, searchStr, searchStr], (err, rows) => {
     if (err) {
-      console(err, 'ERROR IS PREV')
+      console.log(err, 'ERROR IS PREV')
       return res.status(404).json({
         status: 404,
         success: false,
@@ -120,8 +120,8 @@ app.delete('/quote/:id', (req, res) => {
   }
 });
 
-// Add quote  to local Db
-app.get('/quote', (req, res) => {
+// Add quote  to local Db ADD
+app.post('/quote', (req, res) => {
   try {
     const { movie, character, quote } = req.body;
     sql = ('INSERT INTO quote(movie,quote,character) VALUES (?,?,?)');
