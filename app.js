@@ -68,7 +68,7 @@ app.get('/quote', (req, res) => {
 });
 
 // SEARCH for movie quote in the database SEARCH
-app.post('/quote', (req, res) => {
+app.get('/quote', (req, res) => {
   const searchStr = req.query.searchStr; // accessing searchStr
   const sql = 'SELECT * FROM quote WHERE movie LIKE CONCAT("%", ?, "%") OR character LIKE CONCAT("%", ?, "%") OR quote LIKE CONCAT("%", ?, "%")';
   console.log(req.query, 'req.query text');
@@ -121,11 +121,12 @@ app.delete('/quote/:id', (req, res) => {
 });
 
 // Add quote  to local Db ADD
-app.post('/quote', (req, res) => {
+app.post('/quoteAdd', (req, res) => {
   try {
     const { movie, character, quote } = req.body;
     sql = ('INSERT INTO quote(movie,quote,character) VALUES (?,?,?)');
-    db.run(sql, [movie, quote, character], (err) => {
+    console.log('movie and stuff', movie, quote, character);
+    db.run(sql, movie, quote, character, (err) => {
       if (err) {
         return res.json({
           status: 300,
